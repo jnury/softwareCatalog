@@ -3,20 +3,26 @@
 <article class="post-single">
   <header class="post-header">
     {{ partial "breadcrumbs.html" . }}
-    <h1 class="post-title entry-hint-parent">
-      {{ .Title }}
-      {{- if .Draft }}
-      <span class="entry-hint" title="Draft">
-        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
-          <path
-            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-        </svg>
-      </span>
-      {{- end }}
-    </h1>
-    {{- if .Description }}
-    <div class="post-description">
-      {{ .Description }}
+    {{ $iconPath := print "catalog/" .File.BaseFileName "/icon.png" }}
+    {{ with resources.Get $iconPath }}
+    <img src="{{ .RelPermalink }}" alt="Google Chrome icon">
+    {{ end }}
+    <div class="post-header-text">
+      <h1 class="post-title entry-hint-parent">
+        {{ .Title }}
+        {{- if .Draft }}
+        <span class="entry-hint" title="Draft">
+          <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+            <path
+              d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+          </svg>
+        </span>
+        {{- end }}
+      </h1>
+      {{- if .Description }}
+      <div class="post-description">
+        {{ .Description }}
+      </div>
     </div>
     {{- end }}
     {{- if not (.Param "hideMeta") }}
@@ -34,7 +40,43 @@
   {{- partial "toc.html" . }}
   {{- end }}
 
-  {{ .Params.content }}
+  {{ with .Params.software }}
+  <div class="software-layout">
+    <!-- LEFT COLUMN: Description & functionalities -->
+    <div class="software-main">
+      <h2>Description</h2>
+      <p>{{ .detailledDescription | markdownify }}</p>
+
+      <h2>Functionalities</h2>
+      <ul>
+        {{ range .functionalities }}
+        <li>{{ . }}</li>
+        {{ end }}
+      </ul>
+    </div>
+
+    <!-- RIGHT COLUMN: Technical Info -->
+    <aside class="software-meta">
+      <h3>Technical Information</h3>
+      <ul>
+        <li><strong>Editor:</strong> {{ .editor }}</li>
+        <li><strong>Licensing:</strong> {{ .licensing }}</li>
+        <li><strong>License cost:</strong> {{ .licenseCost }}</li>
+
+        {{ with .productManager }}
+        <li><strong>Product manager:</strong> <a href="{{ .link }}">{{ .name }}</a></li>
+        {{ end }}
+        <li><strong>About:</strong> <a href="{{ .aboutUri }}">Website</a></li>
+        <li><strong>Request:</strong> <a href="{{ .requestUri }}">Request Access</a></li>
+      </ul>
+    </aside>
+  </div>
+  {{ else }}
+  <!-- FALLBACK IF .software IS NOT PRESENT -->
+  <div class="missing-software-banner">
+    ⚠️ <strong>Information for this software is not yet available.</strong>
+  </div>
+  {{ end }}
 
   <footer class="post-footer">
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}

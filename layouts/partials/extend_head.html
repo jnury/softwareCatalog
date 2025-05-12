@@ -1,0 +1,4 @@
+{{ if eq .Layout "software" }}
+  {{ $style := resources.Get "css/software.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ end }}

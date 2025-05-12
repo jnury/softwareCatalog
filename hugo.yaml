@@ -24,7 +24,7 @@ params:
 
   ShowReadingTime: false
   ShowShareButtons: false
-  ShowPostNavLinks: true
+  ShowPostNavLinks: false
   ShowBreadCrumbs: false
   ShowCodeCopyButtons: false
   ShowWordCount: false
@@ -81,6 +81,9 @@ params:
     hidden: true # hide everywhere but not in structured data
     hiddenInList: true # hide on list pages and home
     hiddenInSingle: true # hide on single page
+
+  footer:
+    hideCopyright: true
 
   # for search
   # https://fusejs.io/api/options.html
